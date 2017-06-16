@@ -1,0 +1,23 @@
+{
+    "name": "zuffik/structures",
+    "description": "Data structures and object wrappers for primitive data types",
+    "type": "composer",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kristián Žuffa",
+            "email": "zuffixx@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Zuffik\\Structures\\": "src/",
+            "Zuffik\\Test\\Structures\\": "src/"
+        }
+    },
+    "require": {
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.5"
+    }
+}
