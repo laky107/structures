@@ -35,6 +35,10 @@ abstract class Enum
         $this->value = $value;
     }
 
+    public static function getValues()
+    {
+        return (new ReflectionClass(self::class))->getConstants();
+    }
 
     /**
      * @return mixed

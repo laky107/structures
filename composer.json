@@ -10,6 +10,7 @@
         }
     ],
     "autoload": {
+        "files": ["helpers/functions.php"],
         "psr-4": {
             "Zuffik\\Structures\\": "src/",
             "Zuffik\\Test\\Structures\\": "src/"

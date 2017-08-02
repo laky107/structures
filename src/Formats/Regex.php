@@ -55,6 +55,7 @@ class Regex
     /**
      * @param string|Str $subject
      * @param string|Str|callable $replace
+     * @return mixed
      */
     public function replace($subject, $replace)
     {
