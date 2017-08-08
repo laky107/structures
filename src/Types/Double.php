@@ -37,6 +37,6 @@ class Double extends Number
      */
     public function __toString()
     {
-        return floatval(parent::__toString());
+        return (string) floatval(parent::__toString());
     }
 }
