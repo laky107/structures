@@ -36,9 +36,13 @@ class LinkedList extends Structure
 
     /**
      * LinkedList constructor.
+     * @param array|BasicStructure $param
      */
-    public function __construct()
+    public function __construct($param = [])
     {
+        foreach (array_values($param) as $value) {
+            $this->add($value);
+        }
         $this->size = 0;
         $this->current = $this->first = $this->last = null;
     }

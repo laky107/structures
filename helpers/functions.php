@@ -2,8 +2,11 @@
 
 use Zuffik\Structures\Data\ArrayList;
 use Zuffik\Structures\Data\BasicStructure;
+use Zuffik\Structures\Data\HashMap;
+use Zuffik\Structures\Data\LinkedList;
+use Zuffik\Structures\Formats\JSON;
 use Zuffik\Structures\Formats\Regex;
-use Zuffik\Structures\Types\Float;
+use Zuffik\Structures\Types\Double;
 use Zuffik\Structures\Types\Integer;
 use Zuffik\Structures\Types\Number;
 use Zuffik\Structures\Types\Str;
@@ -30,6 +33,17 @@ if(!function_exists('regex')) {
     }
 }
 
+if(!function_exists('json')) {
+    /**
+     * @param string|Regex $json
+     * @return JSON
+     */
+    function json($json)
+    {
+        return new JSON((string) $json);
+    }
+}
+
 if(!function_exists('arrayList')) {
     /**
      * @param array|BasicStructure $param
@@ -38,6 +52,28 @@ if(!function_exists('arrayList')) {
     function arrayList($param = [])
     {
         return new ArrayList($param);
+    }
+}
+
+if(!function_exists('linkedList')) {
+    /**
+     * @param array|BasicStructure $param
+     * @return LinkedList
+     */
+    function linkedList($param = [])
+    {
+        return new LinkedList($param);
+    }
+}
+
+if(!function_exists('hashMap')) {
+    /**
+     * @param array|BasicStructure $param
+     * @return HashMap
+     */
+    function hashMap($param = [])
+    {
+        return new HashMap($param);
     }
 }
 
@@ -64,14 +100,14 @@ if(!function_exists('integer')) {
     }
 }
 
-if(!function_exists('float')) {
+if(!function_exists('double')) {
     /**
      * @param float $value
      * @param bool $strict default true. If you want not to type false everywhere use function number
      * @return int
      */
-    function float($value = 0.0, $strict = true)
+    function double($value = 0.0, $strict = true)
     {
-        return new Float($value, $strict);
+        return new Double($value, $strict);
     }
 }

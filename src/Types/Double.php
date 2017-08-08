@@ -9,7 +9,7 @@
 namespace Zuffik\Structures\Types;
 
 
-class Float extends Number
+class Double extends Number
 {
     /**
      * Integer constructor.
@@ -18,8 +18,8 @@ class Float extends Number
      */
     public function __construct($value = 0.0, $strict = false)
     {
-        if($strict && (is_float($value) || !is_numeric($value))) {
-            throw new \InvalidArgumentException('Float::__construct() accepts only floats and ' . gettype($value) . ' given.');
+        if($strict && !(is_float($value) || !is_numeric($value))) {
+            throw new \InvalidArgumentException('Double::__construct() accepts only floats and ' . gettype($value) . ' given.');
         }
         parent::__construct($value);
     }

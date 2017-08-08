@@ -31,7 +31,7 @@ abstract class Number
      */
     public static function create($value)
     {
-        return is_float($value) ? new Float($value) : new Integer($value);
+        return is_float($value) ? new Double($value) : new Integer($value);
     }
 
     /**

@@ -99,4 +99,22 @@ class Str
     {
         return strpos($this->string, (string) $string) !== false;
     }
+
+    /**
+     * @param string $charlist
+     * @return Str
+     */
+    public function trim($charlist = " \t\n\r\0\x0B")
+    {
+        $this->string = trim($this->string, $charlist);
+        return $this;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isEmpty()
+    {
+        return empty($this->string) || ((string) $this->trim()) == '';
+    }
 }

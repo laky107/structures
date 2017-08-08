@@ -30,7 +30,7 @@ class JSON implements ArrayAccess
         if(is_string($json)) {
             $decoded = json_decode($json, true);
             if($decoded === null) {
-                throw new \Exception("Empty or corrupted JSON string ($json)");
+                throw new \InvalidArgumentException("Empty or corrupted JSON string ($json)");
             }
             $this->array = ArraySerializableConvertor::toSerializable($decoded);
         } else if($json instanceof BasicStructure) {
