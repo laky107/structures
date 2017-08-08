@@ -18,10 +18,10 @@ class Double extends Number
      */
     public function __construct($value = 0.0, $strict = false)
     {
-        if($strict && !(is_float($value) || !is_numeric($value))) {
-            throw new \InvalidArgumentException('Double::__construct() accepts only floats and ' . gettype($value) . ' given.');
-        }
         parent::__construct($value);
+        if($strict && !(is_float($this->value) || !is_numeric($this->value))) {
+            throw new \InvalidArgumentException('Double::__construct() accepts only floats and ' . gettype($this->value) . ' given.');
+        }
     }
 
     /**

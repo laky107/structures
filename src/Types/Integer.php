@@ -18,10 +18,10 @@ class Integer extends Number
      */
     public function __construct($value = 0, $strict = false)
     {
-        if($strict && (is_float($value) || !is_numeric($value))) {
-            throw new \InvalidArgumentException('Integer::__construct() accepts only integers and ' . gettype($value) . ' given.');
+        parent::__construct($value);
+        if($strict && (is_float($this->value) || !is_numeric($this->value))) {
+            throw new \InvalidArgumentException('Integer::__construct() accepts only integers and ' . gettype($this->value) . ' given.');
         }
-        parent::__construct(intval($value));
     }
 
     /**

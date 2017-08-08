@@ -18,10 +18,13 @@ abstract class Number
 
     /**
      * Number constructor.
-     * @param float|int $value
+     * @param float|int|Number $value
      */
     public function __construct($value = 0)
     {
+        if($value instanceof Number) {
+            $this->value = $value->getValue();
+        }
         $this->value = $value;
     }
 
@@ -32,6 +35,16 @@ abstract class Number
     public static function create($value)
     {
         return is_float($value) ? new Double($value) : new Integer($value);
+    }
+
+    /**
+     * @param float|int $value
+     * @return Number
+     */
+    public function setValue($value)
+    {
+        $this->value = $value;
+        return $this;
     }
 
     /**
