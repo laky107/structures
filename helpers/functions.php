@@ -6,6 +6,7 @@ use Zuffik\Structures\Data\HashMap;
 use Zuffik\Structures\Data\LinkedList;
 use Zuffik\Structures\Formats\JSON;
 use Zuffik\Structures\Formats\Regex;
+use Zuffik\Structures\Types\Boolean;
 use Zuffik\Structures\Types\Double;
 use Zuffik\Structures\Types\Integer;
 use Zuffik\Structures\Types\Number;
@@ -104,10 +105,21 @@ if(!function_exists('double')) {
     /**
      * @param float $value
      * @param bool $strict default true. If you want not to type false everywhere use function number
-     * @return int
+     * @return Double
      */
     function double($value = 0.0, $strict = true)
     {
         return new Double($value, $strict);
+    }
+}
+
+if(!function_exists('boolean')) {
+    /**
+     * @param boolean|Boolean $value
+     * @return Boolean
+     */
+    function boolean($value)
+    {
+        return new Boolean($value);
     }
 }

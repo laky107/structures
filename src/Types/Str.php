@@ -117,4 +117,54 @@ class Str
     {
         return empty($this->string) || ((string) $this->trim()) == '';
     }
+
+    /**
+     * @return Str
+     */
+    public function slug()
+    {
+        $this->string = strtolower(
+            preg_replace(
+                '~-+~',
+                '-',
+                trim(
+                    preg_replace(
+                        '~[^-\w]+~',
+                        '',
+                        iconv(
+                            'utf-8',
+                            'us-ascii//TRANSLIT',
+                            preg_replace(
+                                '~[^\pL\d]+~u',
+                                '-',
+                                $this->string
+                            )
+                        )
+                    ),
+                    '-'
+                )
+            )
+        );
+        if (empty($this->string)) {
+            $this->string = 'n-a';
+        }
+        return $this;
+    }
+
+    /**
+     * @param Integer|int $length
+     * @param string|Str $string
+     * @param Integer|int $side
+     * @return $this
+     */
+    public function pad($length, $string = '0', $side = STR_PAD_LEFT)
+    {
+        $this->string = str_pad(
+            intval((string) $this->string),
+            intval((string) $length),
+            $string,
+            intval((string) $side)
+        );
+        return $this;
+    }
 }

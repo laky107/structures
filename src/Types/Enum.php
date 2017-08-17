@@ -29,15 +29,26 @@ abstract class Enum
     public function __construct($value)
     {
         $this->constants = (new ReflectionClass($this))->getConstants();
-        if(!in_array($value, $this->constants)) {
-            throw new Exception('Could not read ' . $value . ' constant of ' . get_class($this));
-        }
-        $this->value = $value;
+        $this->setValue($value);
     }
 
     public static function getValues()
     {
         return (new ReflectionClass(self::class))->getConstants();
+    }
+
+    /**
+     * @param mixed $value
+     * @return Enum
+     * @throws Exception
+     */
+    public function setValue($value)
+    {
+        if(!in_array($value, $this->constants)) {
+            throw new Exception('Could not read ' . $value . ' constant of ' . get_class($this));
+        }
+        $this->value = $value;
+        return $this;
     }
 
     /**
