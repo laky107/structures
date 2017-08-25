@@ -167,4 +167,32 @@ class Str
         );
         return $this;
     }
+
+    /**
+     * @return Str
+     */
+    public function upperCamelCase()
+    {
+        $delimiters = " \t\r\n\f\v_";
+        $this->string = preg_replace("/[$delimiters]/", '', ucwords($this->string, $delimiters));
+        return $this;
+    }
+
+    /**
+     * @return Str
+     */
+    public function lowerCamelCase()
+    {
+        $this->string = lcfirst($this->upperCamelCase());
+        return $this;
+    }
+
+    /**
+     * @return Str
+     * @see Str::lowerCamelCase()
+     */
+    public function camelCase()
+    {
+        return $this->lowerCamelCase();
+    }
 }
