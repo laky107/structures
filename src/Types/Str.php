@@ -195,4 +195,49 @@ class Str
     {
         return $this->lowerCamelCase();
     }
+
+    /**
+     * @param string[] $args
+     * @return string[]
+     */
+    private function getSprintfArgs($args)
+    {
+        if(count($args) > 1 || !is_array($args[0])) {
+            $args = $args[0];
+        }
+        return $args;
+    }
+
+    /**
+     * Format string
+     *
+     * @see sprintf()
+     * @param array $args
+     * @return Str
+     * @throws \Exception
+     */
+    public function format(...$args)
+    {
+        $args = $this->getSprintfArgs($args);
+        $expected = count($args);
+        $real = substr_count($this->string, '%s');
+        if($expected != $real) {
+            throw new \Exception("Method Str::format expects $expected exactly arguments. $real given.");
+        }
+        $this->string = vsprintf($this->string, $args);
+        return $this;
+    }
+
+    /**
+     * Returns NEW formatted string string
+     *
+     * @see sprintf()
+     * @param array $args
+     * @return Str
+     * @throws \Exception
+     */
+    public function formatNew(...$args)
+    {
+        return string($this)->format($args);
+    }
 }
