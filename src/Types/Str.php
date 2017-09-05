@@ -240,4 +240,14 @@ class Str
     {
         return string($this)->format($args);
     }
+
+    /**
+     * @param string|Str $string
+     * @return Str
+     */
+    public function setValue($string)
+    {
+        $this->string = $string;
+        return $this;
+    }
 }
