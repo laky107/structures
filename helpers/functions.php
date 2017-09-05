@@ -36,12 +36,12 @@ if(!function_exists('regex')) {
 
 if(!function_exists('json')) {
     /**
-     * @param string|Regex $json
+     * @param array|BasicStructure|string|JSON $json
      * @return JSON
      */
     function json($json)
     {
-        return new JSON((string) $json);
+        return new JSON($json);
     }
 }
 
