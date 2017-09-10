@@ -5,6 +5,7 @@ use Zuffik\Structures\Data\BasicStructure;
 use Zuffik\Structures\Data\HashMap;
 use Zuffik\Structures\Data\LinkedList;
 use Zuffik\Structures\Formats\JSON;
+use Zuffik\Structures\Formats\Random;
 use Zuffik\Structures\Formats\Regex;
 use Zuffik\Structures\Types\Boolean;
 use Zuffik\Structures\Types\Double;
@@ -121,5 +122,12 @@ if(!function_exists('boolean')) {
     function boolean($value)
     {
         return new Boolean($value);
+    }
+}
+
+if(!function_exists('random')) {
+    function random()
+    {
+        return new Random();
     }
 }

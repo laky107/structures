@@ -13,6 +13,7 @@ use Zuffik\Structures\Data\ArrayList;
 use Zuffik\Structures\Data\HashMap;
 use Zuffik\Structures\Data\LinkedList;
 use Zuffik\Structures\Formats\JSON;
+use Zuffik\Structures\Formats\Random;
 use Zuffik\Structures\Formats\Regex;
 use Zuffik\Structures\Types\Double;
 use Zuffik\Structures\Types\Integer;
@@ -33,6 +34,7 @@ class FunctionsTest extends TestCase
         $this->assertEquals(Number::create(1.1), number(1.1));
         $this->assertEquals(new Integer(1), integer(1));
         $this->assertEquals(new Double(1.1), double(1.1));
+        $this->assertEquals(new Random(), \random());
     }
 
     public function testNotValidRegex()
