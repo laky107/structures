@@ -26,13 +26,23 @@ class Str
     }
 
     /**
+     * @param string $name
+     * @param array ...$args
+     * @return mixed
+     */
+    private function callFunc($name, ...$args)
+    {
+        return function_exists("mb_$name") ? call_user_func_array("mb_$name", $args) : call_user_func_array($name, $args);
+    }
+
+    /**
      * @param string|Str $search
      * @param string|Str $replace
      * @return Str
      */
     public function replace($search, $replace)
     {
-        $this->string = str_replace($search, $replace, $this->string);
+        $this->string = $this->callFunc('str_replace', $search, $replace, $this->string);
         return $this;
     }
 
@@ -49,7 +59,7 @@ class Str
      */
     public function toUppercase()
     {
-        $this->string = strtoupper($this->string);
+        $this->string = $this->callFunc('strtoupper', $this->string);
         return $this;
     }
 
@@ -58,7 +68,7 @@ class Str
      */
     public function toLowercase()
     {
-        $this->string = strtolower($this->string);
+        $this->string = $this->callFunc('strtolower', $this->string);
         return $this;
     }
 
@@ -67,7 +77,7 @@ class Str
      */
     public function capitalize()
     {
-        $this->string = ucfirst($this->string);
+        $this->string = $this->callFunc('ucfirst', $this->string);
         return $this;
     }
 
@@ -76,7 +86,7 @@ class Str
      */
     public function lowerFirst()
     {
-        $this->string = lcfirst($this->string);
+        $this->string = $this->callFunc('lcfirst', $this->string);
         return $this;
     }
 
@@ -87,7 +97,7 @@ class Str
      */
     public function substring($start = 0, $length = null)
     {
-        $this->string = substr($this->string, $start, $length);
+        $this->string = $this->callFunc('substr', $this->string, $start, $length);
         return $this;
     }
 
@@ -97,7 +107,7 @@ class Str
      */
     public function contains($string)
     {
-        return strpos($this->string, (string) $string) !== false;
+        return $this->callFunc('strpos', $this->string, (string) $string) !== false;
     }
 
     /**
