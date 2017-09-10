@@ -9,7 +9,7 @@
 namespace Zuffik\Structures\Types;
 
 
-class Str
+class Str implements \Countable
 {
     /**
      * @var string
@@ -87,6 +87,15 @@ class Str
     public function lowerFirst()
     {
         $this->string = $this->callFunc('lcfirst', $this->string);
+        return $this;
+    }
+
+    /**
+     * @return Str
+     */
+    public function capitalizeAll()
+    {
+        $this->string = $this->callFunc('ucwords', $this->string);
         return $this;
     }
 
@@ -259,5 +268,27 @@ class Str
     {
         $this->string = $string;
         return $this;
+    }
+
+    /**
+     * Count elements of an object
+     * @link http://php.net/manual/en/countable.count.php
+     * @return int The custom count as an integer.
+     * </p>
+     * <p>
+     * The return value is cast to an integer.
+     * @since 5.1.0
+     */
+    public function count()
+    {
+        return $this->callFunc('strlen', (string) $this->string);
+    }
+
+    /**
+     * @return int
+     */
+    public function length()
+    {
+        return $this->count();
     }
 }
