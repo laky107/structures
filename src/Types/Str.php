@@ -75,6 +75,22 @@ class Str implements \Countable
     /**
      * @return Str
      */
+    public function toUpper()
+    {
+        return $this->toUppercase();
+    }
+
+    /**
+     * @return Str
+     */
+    public function toLower()
+    {
+        return $this->toLowercase();
+    }
+
+    /**
+     * @return Str
+     */
     public function capitalize()
     {
         $this->string = $this->callFunc('ucfirst', $this->string);
@@ -171,6 +187,14 @@ class Str implements \Countable
     }
 
     /**
+     * @return Str
+     */
+    public function slugify()
+    {
+        return $this->slug();
+    }
+
+    /**
      * @param Integer|int $length
      * @param string|Str $string
      * @param Integer|int $side
@@ -213,6 +237,50 @@ class Str implements \Countable
     public function camelCase()
     {
         return $this->lowerCamelCase();
+    }
+
+    /**
+     * @return Str
+     * @see Str::lowerCamelCase()
+     */
+    public function toCamelCase()
+    {
+        return $this->camelCase();
+    }
+
+    /**
+     * @return Str
+     * @see Str::lowerCamelCase()
+     */
+    public function toLowerCamelCase()
+    {
+        return $this->camelCase();
+    }
+
+    /**
+     * @return Str
+     * @see Str::upperCamelCase()
+     */
+    public function toUpperCamelCase()
+    {
+        return $this->upperCamelCase();
+    }
+
+    /**
+     * @return Str
+     */
+    public function snakeCase()
+    {
+        $this->string = ltrim(strtolower(preg_replace('/[A-Z]([A-Z](?![a-z]))*/', '_$0', $this->camelCase())), '_');
+        return $this;
+    }
+
+    /**
+     * @return Str
+     */
+    public function toSnakeCase()
+    {
+        return $this->snakeCase();
     }
 
     /**

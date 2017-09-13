@@ -34,5 +34,6 @@ class StrTest extends TestCase
         $this->assertEquals('helloWorld', (string) string('Hello world')->lowerCamelCase());
         $this->assertEquals('Hello world', (string) string('Hello %s')->format('world'));
         $this->assertEquals('Hello world', (string) string('')->setValue('Hello world'));
+        $this->assertEquals('hello_world', (string) string('Hello world')->snakeCase());
     }
 }
