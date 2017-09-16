@@ -8,8 +8,8 @@
 
 namespace Zuffik\Test\Structures;
 
-use Zuffik\Structures\Types\Str;
 use PHPUnit\Framework\TestCase;
+use Zuffik\Structures\Types\StringActions\Partitioning\StringPartition;
 
 class StrTest extends TestCase
 {
@@ -35,5 +35,21 @@ class StrTest extends TestCase
         $this->assertEquals('Hello world', (string) string('Hello %s')->format('world'));
         $this->assertEquals('Hello world', (string) string('')->setValue('Hello world'));
         $this->assertEquals('hello_world', (string) string('Hello world')->snakeCase());
+    }
+
+    public function testPartitioning()
+    {
+        $str = string('hello_world_how_are_you');
+        $this->assertEquals('hello_world_how_are', (string) string($str)->part('_', StringPartition::STR_PART_UNTIL_LAST));
+        $this->assertEquals('hello', (string) string($str)->part('_', StringPartition::STR_PART_UNTIL_FIRST));
+        $this->assertEquals('world_how_are_you', (string) string($str)->part('_', StringPartition::STR_PART_FROM_FIRST));
+        $this->assertEquals('you', (string) string($str)->part('_', StringPartition::STR_PART_FROM_LAST));
+        $this->assertEquals('world_how_are', (string) string($str)->part('_', StringPartition::STR_PART_ALL_BETWEEN));
+
+        $this->assertEquals('', (string) string($str)->part(',', StringPartition::STR_PART_UNTIL_LAST));
+        $this->assertEquals('', (string) string($str)->part(',', StringPartition::STR_PART_UNTIL_FIRST));
+        $this->assertEquals('', (string) string($str)->part(',', StringPartition::STR_PART_FROM_FIRST));
+        $this->assertEquals('', (string) string($str)->part(',', StringPartition::STR_PART_FROM_LAST));
+        $this->assertEquals('', (string) string($str)->part(',', StringPartition::STR_PART_ALL_BETWEEN));
     }
 }

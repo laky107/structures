@@ -9,6 +9,9 @@
 namespace Zuffik\Structures\Types;
 
 
+use Zuffik\Structures\Types\StringActions\Partitioning\PartitionAction;
+use Zuffik\Structures\Types\StringActions\Partitioning\StringPartition;
+
 class Str implements \Countable
 {
     /**
@@ -358,5 +361,37 @@ class Str implements \Countable
     public function length()
     {
         return $this->count();
+    }
+
+    /**
+     * @param Str|string $subString
+     * @return int
+     */
+    public function find($subString)
+    {
+        $pos = $this->callFunc('strpos', $this->string, $subString);
+        return $pos === false ? -1 : $pos;
+    }
+
+    /**
+     * @param string $delimiter
+     * @return \Zuffik\Structures\Data\ArrayList
+     */
+    public function split($delimiter = ' ')
+    {
+        return arrayList(explode($delimiter, $this->string));
+    }
+
+    /**
+     * @param Str|string $character
+     * @param string $type
+     * @return Str
+     */
+    public function part($character, $type)
+    {
+        StringPartition::verify($type);
+        /** @var PartitionAction $action */
+        $action = new $type;
+        return $action->process($this, $character);
     }
 }

@@ -66,4 +66,9 @@ abstract class Enum
     {
         return $this->constants;
     }
+
+    public static function verify($value)
+    {
+        return (new static($value))->getValue();
+    }
 }
