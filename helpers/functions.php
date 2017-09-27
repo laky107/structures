@@ -7,6 +7,7 @@ use Zuffik\Structures\Data\LinkedList;
 use Zuffik\Structures\Formats\JSON;
 use Zuffik\Structures\Formats\Random;
 use Zuffik\Structures\Formats\Regex;
+use Zuffik\Structures\Formats\URL;
 use Zuffik\Structures\Types\Boolean;
 use Zuffik\Structures\Types\Double;
 use Zuffik\Structures\Types\Integer;
@@ -129,5 +130,12 @@ if(!function_exists('random')) {
     function random()
     {
         return new Random();
+    }
+}
+
+if(!function_exists('url')) {
+    function url($path = '')
+    {
+        return new Url($path);
     }
 }
