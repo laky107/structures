@@ -12,6 +12,7 @@ namespace Zuffik\Structures\Data;
 use Exception;
 use Generator;
 use Iterator;
+use Zuffik\Structures\Helpers\RecursiveGetter;
 use Zuffik\Structures\Serializable;
 use Zuffik\Structures\SerializableChecker;
 
@@ -36,10 +37,10 @@ class ArrayList extends Structure implements Iterator
      */
     public function __construct($param = [])
     {
-        if(func_num_args() > 1) {
+        if (func_num_args() > 1) {
             $param = func_get_args();
         }
-        if(!$this->isSerializable($param) && !is_array($param)) {
+        if (!$this->isSerializable($param) && !is_array($param)) {
             throw new Exception(
                 'Argument #1 of ' . get_class($this) . '::__construct must be an array or instance of serializable. ' .
                 (is_object($param) ? 'Instance of ' . get_class($param) : gettype($param)) . ' given'
@@ -57,32 +58,30 @@ class ArrayList extends Structure implements Iterator
      */
     public function find($search, $method = null, $strict = false)
     {
-        if(!empty($method)) {
+        if (!empty($method)) {
             foreach ($this->array as $item) {
-                if(!is_object($item)) {
+                if (!is_object($item)) {
                     throw new Exception('Cannot call method ' . $method . ' on non-object. ' . gettype($item) . ' given.');
                 }
-                if(!method_exists($item, $method)) {
-                    throw new Exception('Object of class ' . get_class($item) . ' has no method ' . $method);
-                }
-                if($strict) {
-                    if(call_user_func([$item, $method]) === $search) {
+                $val = RecursiveGetter::get($item, $method);
+                if ($strict) {
+                    if ($val === $search) {
                         return $item;
                     }
                 } else {
-                    if(call_user_func([$item, $method]) == $search) {
+                    if ($val == $search) {
                         return $item;
                     }
                 }
             }
         } else {
             foreach ($this->array as $item) {
-                if($strict) {
-                    if($item === $search) {
+                if ($strict) {
+                    if ($item === $search) {
                         return $item;
                     }
                 } else {
-                    if($item == $search) {
+                    if ($item == $search) {
                         return $item;
                     }
                 }
@@ -120,7 +119,7 @@ class ArrayList extends Structure implements Iterator
     public function get($key)
     {
         $count = $this->size();
-        if($key >= $count) {
+        if ($key >= $count) {
             throw new Exception("Index out of bounds (requested: $key, limit: $count)");
         }
         return $this->array[$key];
@@ -207,10 +206,10 @@ class ArrayList extends Structure implements Iterator
      */
     public function merge($structure)
     {
-        if($this->isSerializable($structure)) {
+        if ($this->isSerializable($structure)) {
             $structure = $structure->toArray();
         }
-        if(!is_array($structure)) {
+        if (!is_array($structure)) {
             throw new Exception(
                 'Argument #1 of ' . get_class($this) . '::mergeWith must be an array or instance of serializable. ' .
                 (is_object($structure) ? 'Instance of ' . get_class($structure) : gettype($structure)) . ' given'
@@ -247,9 +246,9 @@ class ArrayList extends Structure implements Iterator
     public function deleteByValue($value, $stopAtFirst = true)
     {
         foreach ($this->array as $k => $v) {
-            if($v == $value) {
+            if ($v == $value) {
                 unset($this->array[$k]);
-                if($stopAtFirst) {
+                if ($stopAtFirst) {
                     break;
                 }
             }
@@ -265,7 +264,7 @@ class ArrayList extends Structure implements Iterator
     public function contains($value)
     {
         foreach ($this->array as $k => $v) {
-            if($v == $value) {
+            if ($v == $value) {
                 return true;
             }
         }
@@ -320,6 +319,25 @@ class ArrayList extends Structure implements Iterator
         usort($this->array, $callable);
         $this->array = array_values($this->array);
         return $this;
+    }
+
+    /**
+     * @param string[] $criteria
+     * @return ArrayList
+     */
+    public function multiSort($criteria = [])
+    {
+        return $this->sort(function ($v1, $v2) use ($criteria) {
+            foreach ($criteria as $what => $order) {
+                $val1 = RecursiveGetter::get($v1, $what);
+                $val2 = RecursiveGetter::get($v2, $what);
+                if ($val1 == $val2) {
+                    continue;
+                }
+                return ($order == 'desc' ? -1 : 1) * strcmp($val1, $val2);
+            }
+            return 0;
+        });
     }
 
     /**
@@ -433,9 +451,9 @@ class ArrayList extends Structure implements Iterator
     private function joinLevel($glue, $level)
     {
         foreach ($level as $i => $item) {
-            if(is_array($item)) {
+            if (is_array($item)) {
                 $level[$i] = $this->joinLevel($glue, $item);
-            } else if(is_object($item) && !$this->isSerializable($item)) {
+            } else if (is_object($item) && !$this->isSerializable($item)) {
                 $level[$i] = get_class($item);
             }
         }
@@ -491,7 +509,7 @@ class ArrayList extends Structure implements Iterator
      */
     public function diff($array)
     {
-        $this->array = array_values(array_diff($this->array, (array) $array));
+        $this->array = array_values(array_diff($this->array, (array)$array));
         return $this;
     }
 
