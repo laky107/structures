@@ -60,9 +60,6 @@ class ArrayList extends Structure implements Iterator
     {
         if (!empty($method)) {
             foreach ($this->array as $item) {
-                if (!is_object($item)) {
-                    throw new Exception('Cannot call method ' . $method . ' on non-object. ' . gettype($item) . ' given.');
-                }
                 $val = RecursiveGetter::get($item, $method);
                 if ($strict) {
                     if ($val === $search) {
