@@ -527,4 +527,34 @@ class ArrayList extends Structure implements Iterator
         $this->array = array();
         return $this;
     }
+
+    /**
+     * @param callable|callable[]|string|string[] $criteria
+     * @return ArrayList
+     */
+    public function categorize($criteria)
+    {
+        if(!is_array($criteria)) {
+            $criteria = [$criteria];
+        }
+        $result = [];
+        foreach ($criteria as $criterion) {
+            foreach ($this->array as $k => $item) {
+                if(is_callable($criterion)) {
+                    $key = call_user_func($criterion, $item, $k);
+                } else if(is_object($item) && method_exists($item, $criterion)) {
+                    $key = call_user_func([$item, $criterion]);
+                } else if(is_array($item) || $item instanceof \ArrayAccess) {
+                    $key = $item[$criterion];
+                } else {
+                    throw new \InvalidArgumentException('Categorize by unknown way.');
+                }
+                if(empty($result[$key])) {
+                    $result[$key] = [];
+                }
+                $result[$key][] = $item;
+            }
+        }
+        return hashMap($result);
+    }
 }

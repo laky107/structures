@@ -10,10 +10,93 @@ namespace Zuffik\Test\Structures;
 
 use PHPUnit\Framework\TestCase;
 use Zuffik\Structures\Data\ArrayList;
+use Zuffik\Structures\Data\HashMap;
 use Zuffik\Test\Structures\Objects\ReturnsObject;
 
 class StructuresTest extends TestCase
 {
+    /**
+     * @var ArrayList
+     */
+    private $listOrdered;
+    /**
+     * @var ArrayList
+     */
+    private $listUnordered;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->listOrdered = new ArrayList([
+            [
+                'room' => 1,
+                'block' => 'A'
+            ],
+            [
+                'room' => 2,
+                'block' => 'A'
+            ],
+            [
+                'room' => 3,
+                'block' => 'A'
+            ],
+            [
+                'room' => 4,
+                'block' => 'A'
+            ],
+            [
+                'room' => 1,
+                'block' => 'B'
+            ],
+            [
+                'room' => 2,
+                'block' => 'B'
+            ],
+            [
+                'room' => 3,
+                'block' => 'B'
+            ],
+            [
+                'room' => 4,
+                'block' => 'B'
+            ]
+        ]);
+        $this->listUnordered = new ArrayList([
+            [
+                'room' => 1,
+                'block' => 'A'
+            ],
+            [
+                'room' => 3,
+                'block' => 'A'
+            ],
+            [
+                'room' => 3,
+                'block' => 'B'
+            ],
+            [
+                'room' => 4,
+                'block' => 'A'
+            ],
+            [
+                'room' => 1,
+                'block' => 'B'
+            ],
+            [
+                'room' => 2,
+                'block' => 'B'
+            ],
+            [
+                'room' => 2,
+                'block' => 'A'
+            ],
+            [
+                'room' => 4,
+                'block' => 'B'
+            ]
+        ]);
+    }
+
     public function testFind()
     {
         $obj = new ReturnsObject(5);
@@ -25,77 +108,55 @@ class StructuresTest extends TestCase
 
     public function testSort()
     {
-        $listOrdered = new ArrayList([
-            [
-                'room' => 1,
-                'block' => 'A'
-            ],
-            [
-                'room' => 2,
-                'block' => 'A'
-            ],
-            [
-                'room' => 3,
-                'block' => 'A'
-            ],
-            [
-                'room' => 4,
-                'block' => 'A'
-            ],
-            [
-                'room' => 1,
-                'block' => 'B'
-            ],
-            [
-                'room' => 2,
-                'block' => 'B'
-            ],
-            [
-                'room' => 3,
-                'block' => 'B'
-            ],
-            [
-                'room' => 4,
-                'block' => 'B'
-            ]
-        ]);
-        $listUnordered = new ArrayList([
-            [
-                'room' => 1,
-                'block' => 'A'
-            ],
-            [
-                'room' => 3,
-                'block' => 'A'
-            ],
-            [
-                'room' => 3,
-                'block' => 'B'
-            ],
-            [
-                'room' => 4,
-                'block' => 'A'
-            ],
-            [
-                'room' => 1,
-                'block' => 'B'
-            ],
-            [
-                'room' => 2,
-                'block' => 'B'
-            ],
-            [
-                'room' => 2,
-                'block' => 'A'
-            ],
-            [
-                'room' => 4,
-                'block' => 'B'
-            ]
-        ]);
-        $this->assertEquals($listOrdered, $listUnordered->multiSort([
+        $this->assertEquals($this->listOrdered, $this->listUnordered->multiSort([
             'block' => 'asc',
             'room' => 'asc'
         ]));
+    }
+
+    public function testCategorize()
+    {
+        $categorized = new HashMap([
+            'A' => [
+                [
+                    'room' => 1,
+                    'block' => 'A'
+                ],
+                [
+                    'room' => 3,
+                    'block' => 'A'
+                ],
+                [
+                    'room' => 4,
+                    'block' => 'A'
+                ],
+                [
+                    'room' => 2,
+                    'block' => 'A'
+                ],
+            ],
+            'B' => [
+                [
+                    'room' => 3,
+                    'block' => 'B'
+                ],
+                [
+                    'room' => 1,
+                    'block' => 'B'
+                ],
+                [
+                    'room' => 2,
+                    'block' => 'B'
+                ],
+                [
+                    'room' => 4,
+                    'block' => 'B'
+                ]
+            ]
+        ]);
+        $this->assertEquals($categorized, $this->listUnordered->categorize('block'));
+        $this->assertEquals($categorized, $this->listUnordered->categorize(function($item) {
+            return $item['block'];
+        }));
     }
 }
