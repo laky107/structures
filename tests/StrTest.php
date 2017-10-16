@@ -35,6 +35,7 @@ class StrTest extends TestCase
         $this->assertEquals('Hello world', (string) string('Hello %s')->format('world'));
         $this->assertEquals('Hello world', (string) string('')->setValue('Hello world'));
         $this->assertEquals('hello_world', (string) string('Hello world')->snakeCase());
+        $this->assertEquals(3, (string) string('Hello world')->substrCount('l'));
     }
 
     public function testPartitioning()

@@ -394,4 +394,13 @@ class Str implements \Countable
         $action = new $type;
         return $action->process($this, $character);
     }
+
+    /**
+     * @param string|Str $char
+     * @return int
+     */
+    public function substrCount($char)
+    {
+        return $this->callFunc('substr_count', $this->string, (string) $char);
+    }
 }
