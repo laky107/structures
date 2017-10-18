@@ -405,4 +405,12 @@ class HashMap extends Structure
         $this->map = array();
         return $this;
     }
+
+    /**
+     * @return ArrayList
+     */
+    public function getValues()
+    {
+        return arrayList(array_values($this->map));
+    }
 }
