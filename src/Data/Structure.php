@@ -28,18 +28,6 @@ abstract class Structure implements Countable, ArrayAccess, BasicStructure, Iter
     public abstract function size();
 
     /**
-     * @param mixed $search a value to search
-     * @param callable|null $method a method to call on iterated value to compare with $search
-     * @param bool $strict whether to use == or ===
-     * @return mixed|null
-     * @throws \Exception
-     */
-    public function find($search, $method = null, $strict = false)
-    {
-        return Finder::find($this, $search, $method, $strict);
-    }
-
-    /**
      * @param Structure|array $structure
      * @return static
      */
@@ -189,5 +177,32 @@ abstract class Structure implements Countable, ArrayAccess, BasicStructure, Iter
         $this[$i1] = $this[$i2];
         $this[$i2] = $tmp;
         return $this;
+    }
+
+    /**
+     * @param mixed $search a value to search
+     * @param callable|null $method a method to call on iterated value to compare with $search
+     * @param bool $strict whether to use == or ===
+     * @return mixed|null
+     * @throws \Exception
+     */
+    public function find($search, $method = null, $strict = false)
+    {
+        return Finder::find($this, $search, $method, $strict);
+    }
+
+    /**
+     * @param callable $callable
+     * @return int
+     */
+    public function countIf($callable)
+    {
+        $c = 0;
+        foreach ($this as $key => $value) {
+            if(call_user_func($callable, $value, $key)) {
+                $c++;
+            }
+        }
+        return $c++;
     }
 }

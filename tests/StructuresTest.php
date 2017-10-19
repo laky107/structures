@@ -156,7 +156,7 @@ class StructuresTest extends TestCase
             ]
         ]);
         $this->assertEquals($categorized, $this->listUnordered->categorize('block'));
-        $this->assertEquals($categorized, $this->listUnordered->categorize(function($item) {
+        $this->assertEquals($categorized, $this->listUnordered->categorize(function ($item) {
             return $item['block'];
         }));
     }
@@ -167,5 +167,13 @@ class StructuresTest extends TestCase
         $this->assertEquals(\arrayList([1, 8, 4, 2, 16]), $list->swap(1, 3));
         $this->expectException(Exception::class);
         $list->swap(10, 15);
+    }
+
+    public function testCountIf()
+    {
+        $list = \arrayList([1, 1, 0, 1, 1, 0, 1, 0, 0, 0, 1, 0]);
+        $this->assertEquals(6, $list->countIf(function($item) {
+            return $item == 0;
+        }));
     }
 }
