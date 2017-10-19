@@ -557,4 +557,12 @@ class ArrayList extends Structure implements Iterator
         }
         return hashMap($result);
     }
+
+    public function swap($i1, $i2)
+    {
+        $tmp = $this[$i1];
+        $this[$i1] = $this[$i2];
+        $this[$i2] = $tmp;
+        return $this;
+    }
 }

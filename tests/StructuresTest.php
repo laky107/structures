@@ -9,6 +9,7 @@
 namespace Zuffik\Test\Structures;
 
 use PHPUnit\Framework\TestCase;
+use Exception;
 use Zuffik\Structures\Data\ArrayList;
 use Zuffik\Structures\Data\HashMap;
 use Zuffik\Test\Structures\Objects\ReturnsObject;
@@ -158,5 +159,13 @@ class StructuresTest extends TestCase
         $this->assertEquals($categorized, $this->listUnordered->categorize(function($item) {
             return $item['block'];
         }));
+    }
+
+    public function testSwap()
+    {
+        $list = \arrayList([1, 2, 4, 8, 16]);
+        $this->assertEquals(\arrayList([1, 8, 4, 2, 16]), $list->swap(1, 3));
+        $this->expectException(Exception::class);
+        $list->swap(10, 15);
     }
 }
