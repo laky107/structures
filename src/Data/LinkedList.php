@@ -10,6 +10,8 @@ namespace Zuffik\Structures\Data;
 
 
 use Exception;
+use Zuffik\Structures\Helpers\Finder;
+use Zuffik\Structures\Helpers\RecursiveGetter;
 
 class LinkedList extends Structure
 {
@@ -61,130 +63,11 @@ class LinkedList extends Structure
     }
 
     /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
-     */
-    public function offsetExists($offset)
-    {
-        return $offset < $this->size();
-    }
-
-    /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @throws \Exception
-     * @since 5.0.0
-     */
-    public function offsetGet($offset)
-    {
-        foreach ($this as $i => $item) {
-            if ($i == $offset) {
-                return $item;
-            }
-        }
-        throw new Exception("Index out of bounds ($offset requested; {$this->size()} limit)");
-    }
-
-    /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
-     * @throws \Exception
-     * @since 5.0.0
-     */
-    public function offsetSet($offset, $value)
-    {
-        foreach ($this as $i => $item) {
-            if ($i == $offset) {
-                $item->setData($value);
-                return;
-            }
-        }
-        throw new Exception("Index out of bounds ($offset requested; {$this->size()} limit)");
-    }
-
-    /**
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
-     * @throws \Exception
-     * @since 5.0.0
-     */
-    public function offsetUnset($offset)
-    {
-        $this->remove($offset);
-    }
-
-    /**
      * @return int size of structure
      */
     public function size()
     {
         return $this->size;
-    }
-
-    /**
-     * @param mixed $search a value to search
-     * @param callable|null $method a method to call on iterated value to compare with $search
-     * @param bool $strict whether to use == or ===
-     * @return mixed|null
-     * @throws Exception
-     */
-    public function find($search, $method = null, $strict = false)
-    {
-        if(!empty($method)) {
-            foreach ($this as $item) {
-                if(!is_object($item)) {
-                    throw new Exception('Cannot call method ' . $method . ' on non-object. ' . gettype($item) . ' given.');
-                }
-                if(!method_exists($item, $method)) {
-                    throw new Exception('Object of class ' . get_class($item) . ' has no method ' . $method);
-                }
-                if($strict) {
-                    if(call_user_func([$item, $method]) === $search) {
-                        return $item;
-                    }
-                } else {
-                    if(call_user_func([$item, $method]) == $search) {
-                        return $item;
-                    }
-                }
-            }
-        } else {
-            foreach ($this as $item) {
-                if($strict) {
-                    if($item === $search) {
-                        return $item;
-                    }
-                } else {
-                    if($item == $search) {
-                        return $item;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -205,7 +88,7 @@ class LinkedList extends Structure
      */
     public function map($callable)
     {
-        if(is_callable($callable)) {
+        if (is_callable($callable)) {
             $list = new LinkedList();
             /** @var DataItem $item */
             foreach ($this as $i => $item) {
@@ -224,7 +107,7 @@ class LinkedList extends Structure
      */
     public function filter($callable)
     {
-        if(is_callable($callable)) {
+        if (is_callable($callable)) {
             $list = new LinkedList();
             /** @var DataItem $item */
             foreach ($this as $i => $item) {
@@ -246,7 +129,7 @@ class LinkedList extends Structure
      */
     public function current()
     {
-        if(empty($this->current)) {
+        if (empty($this->current)) {
             $this->current = $this->first;
         }
         return $this->current->getData();
@@ -318,10 +201,10 @@ class LinkedList extends Structure
     {
         $item = new DataItem($item);
         $last = $this->last;
-        if(empty($last)) {
+        if (empty($last)) {
             $this->first = $item;
             $this->last = $item;
-        } else if($this->last === $this->first) {
+        } else if ($this->last === $this->first) {
             $this->last = $item;
             $this->first->setNext($this->last);
         } else {
@@ -333,6 +216,7 @@ class LinkedList extends Structure
 
     /**
      * @param int $index
+     * @return static
      * @throws Exception
      */
     public function remove($index)
@@ -340,10 +224,10 @@ class LinkedList extends Structure
         /** @var DataItem $item */
         $i = 0;
         $before = $this->first;
-        if($index == 0) {
+        if ($index == 0) {
             $this->first = $this->first->getNext();
-        } else if($index == $this->size() - 1) {
-            if($this->size() == 1) {
+        } else if ($index == $this->size() - 1) {
+            if ($this->size() == 1) {
                 $this->first = $this->last;
                 $this->first->setNext(null);
             } else {
@@ -351,7 +235,7 @@ class LinkedList extends Structure
                 do {
                     $i++;
                     $item = $item->getNext();
-                } while($i != $this->size() - 2);
+                } while ($i != $this->size() - 2);
                 $item->setNext(null);
                 unset($this->last);
                 $this->last = $item;
@@ -364,12 +248,65 @@ class LinkedList extends Structure
             $i++;
             $before = $item;
             $item = $item->getNext();
-            if($i == $index) {
+            if ($i == $index) {
                 $before->setNext($item->getNext());
                 unset($item);
-                return;
+                return $this;
             }
-        } while($i != $this->size() - 1);
+        } while ($i != $this->size() - 1);
         throw new Exception("Index out of bounds ($index requested; {$this->size()} limit)");
+    }
+
+    /**
+     * @param callable|string $callable
+     * @return static
+     */
+    public function sort($callable)
+    {
+        foreach ($this as $i1 => $v1) {
+            foreach ($this as $i2 => $v2) {
+                $sort = call_user_func($callable, $v1, $v2);
+                if ($sort > 0) {
+                    $this->swap($i1, $i2);
+                }
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param string|int $key
+     * @return mixed
+     * @throws Exception
+     */
+    public function get($key)
+    {
+        foreach ($this as $i => $v) {
+            if ($i == $key) {
+                return $v;
+            }
+        }
+        throw new Exception("Index out of bounds (size: {$this->size()}, requested: $key)");
+    }
+
+    /**
+     * @param int|string $key
+     * @param int|string $value
+     * @return static
+     * @throws Exception
+     */
+    public function set($key, $value)
+    {
+        if ($this->size() == $key) {
+            $this->add($value);
+        } else if ($this->size() > $key && $key >= 0) {
+            foreach ($this as $i => $item) {
+                if ($i == $key) {
+                    $item->setData($value);
+                    return $this;
+                }
+            }
+        }
+        throw new Exception("Index out of bounds (size: {$this->size()}, requested: $key)");
     }
 }

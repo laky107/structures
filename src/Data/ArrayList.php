@@ -12,6 +12,7 @@ namespace Zuffik\Structures\Data;
 use Exception;
 use Generator;
 use Iterator;
+use Zuffik\Structures\Helpers\Finder;
 use Zuffik\Structures\Helpers\RecursiveGetter;
 use Zuffik\Structures\Serializable;
 use Zuffik\Structures\SerializableChecker;
@@ -50,41 +51,15 @@ class ArrayList extends Structure implements Iterator
     }
 
     /**
-     * @param mixed $search
-     * @param string $method
-     * @param bool $strict
-     * @return mixed
-     * @throws Exception
+     * @param int|string $key
+     * @param int|string $value
+     * @return ArrayList
      */
-    public function find($search, $method = null, $strict = false)
+    public function set($key, $value)
     {
-        if (!empty($method)) {
-            foreach ($this->array as $item) {
-                $val = RecursiveGetter::get($item, $method);
-                if ($strict) {
-                    if ($val === $search) {
-                        return $item;
-                    }
-                } else {
-                    if ($val == $search) {
-                        return $item;
-                    }
-                }
-            }
-        } else {
-            foreach ($this->array as $item) {
-                if ($strict) {
-                    if ($item === $search) {
-                        return $item;
-                    }
-                } else {
-                    if ($item == $search) {
-                        return $item;
-                    }
-                }
-            }
-        }
-        return null;
+        $this->array[intval($key)] = $value;
+        $this->array = array_values($this->array);
+        return $this;
     }
 
     /**
@@ -369,69 +344,6 @@ class ArrayList extends Structure implements Iterator
     }
 
     /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
-     */
-    public function offsetExists($offset)
-    {
-        return true;
-    }
-
-    /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @since 5.0.0
-     */
-    public function offsetGet($offset)
-    {
-        return $this->get($offset);
-    }
-
-    /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->array[intval($offset)] = $value;
-        $this->array = array_values($this->array);
-    }
-
-    /**
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetUnset($offset)
-    {
-        $this->remove($offset);
-    }
-
-    /**
      * @param string $glue
      * @return string
      */
@@ -556,13 +468,5 @@ class ArrayList extends Structure implements Iterator
             }
         }
         return hashMap($result);
-    }
-
-    public function swap($i1, $i2)
-    {
-        $tmp = $this[$i1];
-        $this[$i1] = $this[$i2];
-        $this[$i2] = $tmp;
-        return $this;
     }
 }

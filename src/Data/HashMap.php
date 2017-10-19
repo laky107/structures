@@ -11,6 +11,7 @@ namespace Zuffik\Structures\Data;
 
 use Exception;
 use Generator;
+use Zuffik\Structures\Helpers\Finder;
 use Zuffik\Structures\Serializable;
 use Zuffik\Structures\SerializableChecker;
 
@@ -30,7 +31,7 @@ class HashMap extends Structure
      */
     public function __construct($map = [])
     {
-        if(!$this->isSerializable($map) && !is_array($map)) {
+        if (!$this->isSerializable($map) && !is_array($map)) {
             throw new \Exception('Argument passed to HashMap must be type of array or instance of Serializable. ' . gettype($map) . ' given.');
         }
         $this->map = $this->isSerializable($map) ? $map->toArray() : $map;
@@ -68,7 +69,7 @@ class HashMap extends Structure
      */
     public function get($key, $default = null)
     {
-        if(!isset($this->map[$key])){
+        if (!isset($this->map[$key])) {
             return $default;
         }
         return $this->map[$key];
@@ -80,7 +81,7 @@ class HashMap extends Structure
      */
     public function merge($array)
     {
-        if($array instanceof HashMap) {
+        if ($array instanceof HashMap) {
             $array = $array->toArray();
         }
         $this->map = array_merge($this->map, $array);
@@ -102,7 +103,7 @@ class HashMap extends Structure
     public function remove($key)
     {
         foreach ($this->iterator as $k => $v) {
-            if($v->getKey() == $key) {
+            if ($v->getKey() == $key) {
                 unset($this->iterator[$k]);
             }
         }
@@ -129,68 +130,6 @@ class HashMap extends Structure
     {
         $this->map = array_filter($this->map, $callable, ARRAY_FILTER_USE_BOTH);
         return $this;
-    }
-
-    /**
-     * Whether a offset exists
-     * @link http://php.net/manual/en/arrayaccess.offsetexists.php
-     * @param mixed $offset <p>
-     * An offset to check for.
-     * </p>
-     * @return boolean true on success or false on failure.
-     * </p>
-     * <p>
-     * The return value will be casted to boolean if non-boolean was returned.
-     * @since 5.0.0
-     */
-    public function offsetExists($offset)
-    {
-        return true;
-    }
-
-    /**
-     * Offset to retrieve
-     * @link http://php.net/manual/en/arrayaccess.offsetget.php
-     * @param mixed $offset <p>
-     * The offset to retrieve.
-     * </p>
-     * @return mixed Can return all value types.
-     * @since 5.0.0
-     */
-    public function offsetGet($offset)
-    {
-        return $this->get($offset);
-    }
-
-    /**
-     * Offset to set
-     * @link http://php.net/manual/en/arrayaccess.offsetset.php
-     * @param mixed $offset <p>
-     * The offset to assign the value to.
-     * </p>
-     * @param mixed $value <p>
-     * The value to set.
-     * </p>
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetSet($offset, $value)
-    {
-        $this->put($offset, $value);
-    }
-
-    /**
-     * Offset to unset
-     * @link http://php.net/manual/en/arrayaccess.offsetunset.php
-     * @param mixed $offset <p>
-     * The offset to unset.
-     * </p>
-     * @return void
-     * @since 5.0.0
-     */
-    public function offsetUnset($offset)
-    {
-        $this->remove($offset);
     }
 
     /**
@@ -228,7 +167,7 @@ class HashMap extends Structure
     {
         $i = 0;
         foreach ($this->map as $val) {
-            if($i == $index) {
+            if ($i == $index) {
                 return $val;
             }
             $i++;
@@ -288,49 +227,6 @@ class HashMap extends Structure
         foreach ($this->getIterator() as $item) {
             yield $item;
         }
-    }
-
-    /**
-     * @param mixed $search a value to search
-     * @param callable|null $method a method to call on iterated value to compare with $search
-     * @param bool $strict whether to use == or ===
-     * @return mixed|null
-     * @throws Exception
-     */
-    public function find($search, $method = null, $strict = false)
-    {
-        if(!empty($method)) {
-            foreach ($this->map as $item) {
-                if(!is_object($item)) {
-                    throw new Exception('Cannot call method ' . $method . ' on non-object. ' . gettype($item) . ' given.');
-                }
-                if(!method_exists($item, $method)) {
-                    throw new Exception('Object of class ' . get_class($item) . ' has no method ' . $method);
-                }
-                if($strict) {
-                    if(call_user_func([$item, $method]) === $search) {
-                        return $item;
-                    }
-                } else {
-                    if(call_user_func([$item, $method]) == $search) {
-                        return $item;
-                    }
-                }
-            }
-        } else {
-            foreach ($this->map as $item) {
-                if($strict) {
-                    if($item === $search) {
-                        return $item;
-                    }
-                } else {
-                    if($item == $search) {
-                        return $item;
-                    }
-                }
-            }
-        }
-        return null;
     }
 
     /**
@@ -412,5 +308,33 @@ class HashMap extends Structure
     public function getValues()
     {
         return arrayList(array_values($this->map));
+    }
+
+    /**
+     * @param callable|string $callable
+     * @return static
+     */
+    public function sort($callable)
+    {
+        foreach ($this->map as $i1 => $v1) {
+            foreach ($this->map as $i2 => $v2) {
+                $res = call_user_func($callable, $v1, $v2, $i1, $i2);
+                if($res > 0) {
+                    $this->swap($i1, $i2);
+                }
+            }
+        }
+        return $this;
+    }
+
+    /**
+     * @param int|string $key
+     * @param int|string $value
+     * @return static
+     */
+    public function set($key, $value)
+    {
+        $this->map[$key] = $value;
+        return $this;
     }
 }
