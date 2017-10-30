@@ -4,6 +4,7 @@ use Zuffik\Structures\Data\ArrayList;
 use Zuffik\Structures\Data\BasicStructure;
 use Zuffik\Structures\Data\HashMap;
 use Zuffik\Structures\Data\LinkedList;
+use Zuffik\Structures\Formats\CSV;
 use Zuffik\Structures\Formats\JSON;
 use Zuffik\Structures\Formats\Random;
 use Zuffik\Structures\Formats\Regex;
@@ -137,5 +138,12 @@ if(!function_exists('url')) {
     function url($path = '')
     {
         return new Url($path);
+    }
+}
+
+if(!function_exists('csv')) {
+    function csv($data, $delimiter = ';', $enclosure = '"', $escape = '\\')
+    {
+        return new CSV($data, $delimiter, $enclosure, $escape);
     }
 }

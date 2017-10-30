@@ -10,19 +10,19 @@ namespace Zuffik\Structures\Formats;
 
 
 use ArrayAccess;
-use Zuffik\Structures\Data\BasicStructure;
+use Zuffik\Structures\Data\Structure;
 use Zuffik\Structures\Convertors\ArraySerializableConvertor;
 use Zuffik\Structures\Serializable;
 
-class JSON implements ArrayAccess
+class JSON implements ArrayAccess, \Iterator
 {
     use Serializable;
-    /** @var BasicStructure */
+    /** @var Structure */
     private $array;
 
     /**
      * JSON constructor.
-     * @param array|BasicStructure|string|JSON $json
+     * @param array|Structure|string|JSON $json
      * @throws \Exception
      */
     public function __construct($json)
@@ -33,7 +33,7 @@ class JSON implements ArrayAccess
                 throw new \InvalidArgumentException("Empty or corrupted JSON string ($json)");
             }
             $this->array = ArraySerializableConvertor::toSerializable($decoded);
-        } else if($json instanceof BasicStructure) {
+        } else if($json instanceof Structure) {
             $this->array = $json;
         } else if($json instanceof JSON) {
             $this->array = $json->array;
@@ -43,7 +43,7 @@ class JSON implements ArrayAccess
     }
 
     /**
-     * @return BasicStructure
+     * @return Structure
      */
     public function getArray()
     {
@@ -126,5 +126,61 @@ class JSON implements ArrayAccess
     public function offsetUnset($offset)
     {
         unset($this->array[$offset]);
+    }
+
+    /**
+     * Return the current element
+     * @link http://php.net/manual/en/iterator.current.php
+     * @return mixed Can return any type.
+     * @since 5.0.0
+     */
+    public function current()
+    {
+        return $this->array->current();
+    }
+
+    /**
+     * Move forward to next element
+     * @link http://php.net/manual/en/iterator.next.php
+     * @return void Any returned value is ignored.
+     * @since 5.0.0
+     */
+    public function next()
+    {
+        $this->array->next();
+    }
+
+    /**
+     * Return the key of the current element
+     * @link http://php.net/manual/en/iterator.key.php
+     * @return mixed scalar on success, or null on failure.
+     * @since 5.0.0
+     */
+    public function key()
+    {
+        return $this->array->key();
+    }
+
+    /**
+     * Checks if current position is valid
+     * @link http://php.net/manual/en/iterator.valid.php
+     * @return boolean The return value will be casted to boolean and then evaluated.
+     * Returns true on success or false on failure.
+     * @since 5.0.0
+     */
+    public function valid()
+    {
+        return $this->array->valid();
+    }
+
+    /**
+     * Rewind the Iterator to the first element
+     * @link http://php.net/manual/en/iterator.rewind.php
+     * @return void Any returned value is ignored.
+     * @since 5.0.0
+     */
+    public function rewind()
+    {
+        $this->array->valid();
     }
 }
