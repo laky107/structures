@@ -42,11 +42,11 @@ class LinkedList extends Structure
      */
     public function __construct($param = [])
     {
+        $this->size = 0;
+        $this->current = $this->first = $this->last = null;
         foreach (array_values($param) as $value) {
             $this->add($value);
         }
-        $this->size = 0;
-        $this->current = $this->first = $this->last = null;
     }
 
     /**

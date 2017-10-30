@@ -14,7 +14,7 @@ use Countable;
 use Iterator;
 use Zuffik\Structures\Helpers\Finder;
 
-abstract class Structure implements Countable, ArrayAccess, BasicStructure, Iterator
+abstract class Structure implements Countable, ArrayAccess, BasicStructure, Iterator, \JsonSerializable
 {
     /**
      * Structure constructor.
@@ -204,5 +204,12 @@ abstract class Structure implements Countable, ArrayAccess, BasicStructure, Iter
             }
         }
         return $c++;
+    }
+
+    /**
+     * @return array
+     */
+    public function jsonSerialize() {
+        return $this->toArray();
     }
 }

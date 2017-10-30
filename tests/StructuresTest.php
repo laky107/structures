@@ -176,4 +176,10 @@ class StructuresTest extends TestCase
             return $item == 0;
         }));
     }
+
+    public function testJSON()
+    {
+        $this->assertEquals(json_encode(['foo' => 'bar']), json_encode(\hashMap(['foo' => 'bar'])));
+        $this->assertEquals(json_encode(['foo', 'bar']), json_encode(\linkedList(['foo', 'bar'])));
+    }
 }
