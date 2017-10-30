@@ -29,6 +29,10 @@ class StrTest extends TestCase
         $this->assertFalse(string('Hello world')->isEmpty());
         $this->assertEquals('Hello world', (string) string('        Hello world       ')->trim());
         $this->assertEquals('hello-world', (string) string('Hello world')->slug());
+        $this->assertEquals(
+            'gulalo-sebe-cize-mat-ma-skryvalo',
+            (string) string('gúľalo šebe čiže mať má skrývalô')->slug()
+        );
         $this->assertEquals('00001', (string) string('1')->pad(5));
         $this->assertEquals('HelloWorld', (string) string('Hello world')->upperCamelCase());
         $this->assertEquals('helloWorld', (string) string('Hello world')->lowerCamelCase());

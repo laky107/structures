@@ -157,32 +157,24 @@ class Str implements \Countable
     }
 
     /**
+     * @param string $delimiter
      * @return Str
+     * @see https://gist.github.com/james2doyle/9158349
      */
-    public function slug()
+    public function slug($delimiter = '-')
     {
-        $this->string = strtolower(
-            preg_replace(
-                '~-+~',
-                '-',
-                trim(
-                    preg_replace(
-                        '~[^-\w]+~',
-                        '',
-                        iconv(
-                            'utf-8',
-                            'us-ascii//TRANSLIT',
-                            preg_replace(
-                                '~[^\pL\d]+~u',
-                                '-',
-                                $this->string
-                            )
-                        )
-                    ),
-                    '-'
-                )
-            )
-        );
+        $oldLocale = setlocale(LC_ALL, '0');
+        setlocale(LC_ALL, 'en_US.UTF-8');
+        $clean = iconv('UTF-8', 'ASCII//TRANSLIT', $this->string);
+        if (!empty($replace)) {
+            $clean = str_replace((array) $replace, ' ', $clean);
+        }
+        $clean = preg_replace("/[^a-zA-Z0-9\/_|+ -]/", '', $clean);
+        $clean = strtolower($clean);
+        $clean = preg_replace("/[\/_|+ -]+/", $delimiter, $clean);
+        $clean = trim($clean, $delimiter);
+        setlocale(LC_ALL, $oldLocale);
+        $this->string = $clean;
         if (empty($this->string)) {
             $this->string = 'n-a';
         }
