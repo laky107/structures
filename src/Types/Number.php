@@ -22,7 +22,7 @@ abstract class Number
      */
     public function __construct($value = 0)
     {
-        if($value instanceof Number) {
+        if ($value instanceof Number) {
             $this->value = $value->getValue();
         }
         $this->value = $value;
@@ -60,7 +60,7 @@ abstract class Number
      */
     public function __toString()
     {
-        return (string) $this->value;
+        return (string)$this->value;
     }
 
     /**
@@ -110,6 +110,18 @@ abstract class Number
     {
         $this->value = abs($this->value);
         return $this;
+    }
+
+
+    /**
+     * @param int $decimals
+     * @param string $dec_point
+     * @param string $thousands_sep
+     * @return string
+     */
+    public function numberFormat($decimals = 0, $dec_point = ".", $thousands_sep = ",")
+    {
+        return number_format($this->value, $decimals, $dec_point, $thousands_sep);
     }
 
 
