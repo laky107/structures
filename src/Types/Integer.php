@@ -37,7 +37,7 @@ class Integer extends Number
      */
     public function __toString()
     {
-        return (string) intval(parent::__toString());
+        return (string)parent::__toString();
     }
 
     /**
